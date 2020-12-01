@@ -29,8 +29,18 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
-				<configuration>
-				</configuration>
+				 <configuration>
+        <cloudHubDeployment>
+            <uri>https://anypoint.mulesoft.com</uri>
+            <muleVersion>4.3.0</muleVersion>
+            <username>pbatfinalchange1234</username>
+            <password>@Victory91</password>
+            <applicationName>objectstoreapp</applicationName>
+            <environment>SANDBOX</environment>
+            <workerType>MICRO</workerType>
+            <objectStoreV2>true</objectStoreV2>
+        </cloudHubDeployment>
+    </configuration>
 			</plugin>
 		</plugins>
 	</build>
