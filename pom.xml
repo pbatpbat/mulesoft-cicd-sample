@@ -36,7 +36,7 @@
             <username>pbatfinalchange1234</username>
             <password>@Victory91</password>
             <applicationName>objectstoreapp</applicationName>
-            <environment>SANDBOX</environment>
+            <environment>Sandbox</environment>
             <workerType>MICRO</workerType>
             <objectStoreV2>true</objectStoreV2>
         </cloudHubDeployment>
