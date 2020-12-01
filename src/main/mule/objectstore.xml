@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9b090517-5b80-4726-b828-15b9d9544545" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="c7f06b5f-9f4b-4c98-ade1-36ddb46f7196" />
+	<flow name="objectstoreFlow" doc:id="117d9a82-9da1-4374-a290-7fbb0f1d27b9" >
+		<http:listener doc:name="Listener" doc:id="0f4c98af-924e-4179-9af1-ff36fe2a4fdc" config-ref="HTTP_Listener_config" path="/store"/>
+		<set-variable value="#[attributes.queryParams.keyvalue]" doc:name="Set Variable" doc:id="5e71cf98-66d9-42dc-9123-770b438f6ebd" variableName="key_fields"/>
+		<os:store doc:name="Store" doc:id="6e0b2aa2-b7a1-4224-85f2-ed7672a51d5d" key="#[vars.key_fields]" objectStore="Object_store"/>
+		<ee:transform doc:name="Transform Message" doc:id="3176ee06-f21b-4ea3-a6dd-911abe6e9bc3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "value stored in" ++ vars.key_fields
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="objectstoreFlow1" doc:id="82dbd2fb-968a-4888-a511-64fd61925d47" >
+		<http:listener doc:name="Listener" doc:id="ab2f3f77-0e9c-4a5a-8953-85904e89bf0d" config-ref="HTTP_Listener_config" path="/reterive"/>
+		<set-variable value="#[attributes.queryParams.keyvalue]" doc:name="Set Variable" doc:id="4118eaa0-0474-4868-82e3-d5b48e28d622" variableName="key_fields"/>
+		<os:retrieve doc:name="Retrieve" doc:id="a2811c61-c3a0-4eb0-a681-d0bf957684b9" key="#[vars.key_fields]" objectStore="Object_store">
+			<os:default-value ><![CDATA["this is the default value"]]></os:default-value>
+		</os:retrieve>
+	</flow>
+</mule>
